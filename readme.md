@@ -14,6 +14,40 @@ $ composer require toyza55k/laravel-backend-preset
 ```
 
 ## Usage
+make model
+``` bash
+php artisan make:backend-model Test
+```
+
+make model with request, view-model, controller, export
+``` bash
+php artisan make:backend-model Test -rice
+```
+
+make controller
+``` bash
+php artisan make:backend-controller TestController
+```
+
+make request
+``` bash
+php artisan make:backend-request TestRequest
+```
+
+make view-model (spatie/view-model)
+``` bash
+php artisan make:backend-view-model TestViewModel
+```
+
+make export (Maatwebsite/Laravel-Excel)
+``` bash
+php artisan make:backend-export TestExport
+```
+
+add backend preset (no need)
+``` bash
+php artisan ui backend
+```
 
 ## Change log
 
