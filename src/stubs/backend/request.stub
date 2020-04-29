@@ -1,0 +1,54 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ namespacedModel }};
+use Illuminate\Foundation\Http\FormRequest;
+
+class {{ class }} extends FormRequest
+{
+    public function authorize()
+    {
+        return true;
+    }
+
+    public function rules()
+    {
+        switch($this->method())
+        {
+            case 'GET':
+            case 'DELETE':
+            {
+                return [];
+            }
+            case 'POST':
+            {
+                $rules = [
+                    //
+                ];
+                return $this->getMergedRule($rules);
+            }
+            case 'PUT':
+            case 'PATCH':
+            {
+                $rules = [
+                    //
+                ];
+                return $this->getMergedRule($rules);
+            }
+            default:break;
+        }
+    }
+
+    protected function getMergedRule($rules = array())
+    {
+        $resultRules = [
+            'status' => 'required|in:' . implode_array_keys(',', {{ model }}::statusOptions()),
+        ];
+
+        if (! empty($rules))
+            return array_merge($resultRules, $rules);
+
+        return $resultRules;
+    }
+}

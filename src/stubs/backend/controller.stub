@@ -1,0 +1,168 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ namespacedModel }};
+use {{ rootNamespace }}Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+class {{ class }} extends Controller
+{
+    public function index()
+    {
+        $this->authorize('access {{ modelVariableKebab }} list');
+
+        $contentHeader = [
+            'title' => '{{ model }}',
+            'subtitle' => '{{ model }} List',
+            'bcs' => [
+                [
+                    'title' => '{{ model }} List',
+                    'active' => true
+                ]
+            ]
+        ];
+
+        return view('backend.{{ modelVariableKebab }}.index', compact('contentHeader'));
+    }
+
+    public function listData()
+    {
+        $this->authorize('access {{ modelVariableKebab }} list');
+
+        ${{ modelVariable }} = {{ model }}::query()
+            ->when(request('status'), function ($query) {
+                return $query->where('status', request('status'));
+            });
+
+        return datatables()
+            ->eloquent(${{ modelVariable }})
+            ->addColumns([
+                'display_status',
+                'display_created_at_full_thai',
+                'edit_link',
+                'destroy_link'
+            ])
+            ->orderColumn('display_created_at_full_thai', 'created_at $1')
+            ->toJson();
+    }
+
+    public function create()
+    {
+        $this->authorize('add {{ modelVariableKebab }} list');
+
+        $contentHeader = [
+            'title' => 'Add {{ model }}',
+            'bcs' => [
+                [
+                    'title' => '{{ model }} List',
+                    'link' => route('backend.{{ modelVariableKebab }}.index')
+                ],
+                [
+                    'title' => 'Add {{ model }}',
+                    'active' => true
+                ],
+            ]
+        ];
+
+        return view('backend.{{ modelVariableKebab }}.create', new UserFormViewModel($contentHeader));
+    }
+
+    public function store({{ model }}Request $request)
+    {
+        $this->authorize('add {{ modelVariableKebab }} list');
+
+        $validatedData = $request->validated();
+
+        $modelVariable = {{ model }}::create($validatedData);
+
+        $alert = [
+            '{{ modelVariable }}-created' => true,
+            'alert-type' => 'success',
+            'alert-message' => '{{ model }} is created!',
+        ];
+
+        return redirect(route('backend.{{ modelVariableKebab }}.index'))->with($alert);
+    }
+
+    public function show({{ model }} ${{ modelVariable }})
+    {
+        //
+    }
+
+    public function edit({{ model }} ${{ modelVariable }})
+    {
+        $this->authorize('edit {{ modelVariableKebab }} list');
+
+        $contentHeader = [
+            'title' => 'Edit {{ model }}',
+            'bcs' => [
+                [
+                    'title' => '{{ model }} List',
+                    'link' => route('backend.{{ modelVariableKebab }}.index')
+                ],
+                [
+                    'title' => 'Edit {{ model }}',
+                    'active' => true
+                ],
+            ]
+        ];
+
+        return view('backend.{{ modelVariableKebab }}.edit', new {{ model }}FormViewModel($contentHeader, ${{ modelVariable }}));
+    }
+
+    public function update({{ model }}Request $request, {{ model }} ${{ modelVariable }})
+    {
+        $this->authorize('edit {{ modelVariableKebab }} list');
+
+        $validatedData = $request->validated();
+
+        ${{ modelVariable }}->update($validatedData);
+
+        $alert = [
+            '{{ modelVariable }}-updated' => true,
+            'alert-type' => 'success',
+            'alert-message' => '{{ model }} is updated!',
+        ];
+
+        return redirect(route('backend.{{ modelVariableKebab }}.index'))->with($alert);
+    }
+
+    public function destroy({{ model }} ${{ modelVariable }})
+    {
+        $this->authorize('delete {{ modelVariableKebab }} list');
+
+        ${{ modelVariable }}->delete();
+
+        $alert = [
+            '{{ modelVariable }}-deleted' => true,
+            'alert-type' => 'success',
+            'alert-message' => 'Successfully deleted!',
+        ];
+
+        return redirect(route('backend.{{ modelVariableKebab }}.index'))->with($alert);
+    }
+
+    public function export()
+    {
+        $this->authorize('export {{ modelVariableKebab }} list');
+
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\Backend\{{ model }}Export, '{{ modelVariable }}s.xlsx');
+    }
+
+    public function isValidEmail()
+    {
+        $exceptId = request()->has('id') ? ',' . request('id') : '' ;
+
+        $validator = \Illuminate\Support\Facades\Validator::make(request()->all(), [
+            'email' => 'required|email|max:255|unique:{{ modelVariableSnake }}s,email' . $exceptId,
+            'id' => 'sometimes|exists:{{ modelVariableSnake }}s'
+        ]);
+
+        if ($validator->fails()) {
+            return 'false';
+        }
+
+        return 'true';
+    }
+}

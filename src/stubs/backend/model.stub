@@ -1,0 +1,21 @@
+<?php
+
+namespace {{ namespace }};
+
+use Spatie\Activitylog\Traits\LogsActivity;
+use App\Model\Traits\DisplayDateFormat;
+use Illuminate\Database\Eloquent\Model;
+
+class {{ class }} extends Model
+{
+    use LogsActivity;
+    use DisplayDateFormat;
+
+    protected static $logGuarded = true;
+    protected static $recordEvents = ['updated', 'deleted'];
+
+    public function getEditLinkAttribute() { return route('backend.{{ modelVariableKebab }}.edit', $this); }
+
+    public function getDestroyLinkAttribute() { return route('backend.{{ modelVariableKebab }}.destroy', $this); }
+
+}

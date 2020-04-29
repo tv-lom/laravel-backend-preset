@@ -1,0 +1,30 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ namespacedModel }};
+use Spatie\ViewModels\ViewModel;
+
+class {{ class }} extends ViewModel
+{
+	public $contentHeader;
+	public ${{ modelVariable }};
+
+    public function __construct($contentHeader, {{ model }} ${{ modelVariable }} = null)
+    {
+        $this->contentHeader = $contentHeader;
+        $this->{{ modelVariable }} = ${{ modelVariable }} ?? new {{ model }}();
+    }
+
+    public function statuses(): array
+    {
+    	return $this->{{ modelVariable }}->statusOptions();
+    }
+
+    public function selectedStatus($value): string
+    {
+    	return $value == old('status', $this->{{ modelVariable }}->status)
+    	    ? 'selected'
+    	    : '' ;
+    }
+}
