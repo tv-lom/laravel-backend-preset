@@ -30,10 +30,7 @@
     "autoload": {
         "psr-4": {
             "Toyza55k\\Backend\\": "src/"
-        },
-        "files": [
-            "app/Helpers/*"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {
