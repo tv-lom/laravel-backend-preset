@@ -114,7 +114,7 @@ class BackendMakeModelCommand extends GeneratorCommand
         $modelName = $this->qualifyClass($this->getNameInput());
 
         $this->call('make:backend-export', array_filter([
-            'name'  => "{$export}Export",
+            'name'  => "{$export}sExport",
             '--model' => $modelName,
         ]));
     }
